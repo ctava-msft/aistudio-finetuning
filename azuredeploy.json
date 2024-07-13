@@ -29,8 +29,10 @@
       "identity": {
         "type": "SystemAssigned"
       },
+      "kind": "hub",
       "properties": {
-        "friendlyName": "[variables('workspaceName')]"
+        "friendlyName": "[variables('workspaceName')]",
+        "publicNetworkAccess": "Disabled"
       },
       "dependsOn": [
       ]
