@@ -15,11 +15,8 @@
     }
   },
   "variables": {
-    "aiServicesName": "[format('ais-{0}', variables('uniqueSuffix'))]",
     "computeName": "[format('ci-{0}', variables('uniqueSuffix'))]",
-    "groupName": "amlworkspace",
     "location": "[resourceGroup().location]",
-    "tenantId": "[subscription().tenantId]",
     "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 5)]",
     "workspaceName": "[format('w-{0}', variables('uniqueSuffix'))]"
   },
@@ -52,21 +49,6 @@
       "dependsOn": [
         "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]"
       ]
-    },
-    {
-      "type": "Microsoft.CognitiveServices/accounts",
-      "apiVersion": "2021-10-01",
-      "name": "[variables('aiServicesName')]",
-      "location": "[variables('location')]",
-      "sku": {
-        "name": "S0"
-      },
-      "kind": "AIServices",
-      "properties": {
-        "apiProperties": {
-          "statisticsEnabled": false
-        }
-      }
     }
   ],
   "outputs": {
