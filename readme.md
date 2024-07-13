@@ -22,6 +22,4 @@ python script.py
 
 # Reference
 
-[AUTOML-Classification](https://learn.microsoft.com/en-us/training/modules/find-best-classification-model-automated-machine-learning/1-introduction)
-
-
+[Fine tuning test generation](https://github.com/Azure/azureml-examples/blob/phi/bug_bash/sdk/python/foundation-models/system/finetune/text-generation/chat-completion.ipynb)
