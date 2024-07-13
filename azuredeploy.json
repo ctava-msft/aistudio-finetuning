@@ -1,0 +1,74 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.28.1.47646",
+      "templateHash": "7480269780041571611"
+    }
+  },
+  "parameters": {
+    "vmComputeSize": {
+      "defaultValue": "standard_nc6",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "aiServicesName": "[format('ais-{0}', variables('uniqueSuffix'))]",
+    "computeName": "[format('ci-{0}', variables('uniqueSuffix'))]",
+    "groupName": "amlworkspace",
+    "location": "[resourceGroup().location]",
+    "tenantId": "[subscription().tenantId]",
+    "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 5)]",
+    "workspaceName": "[format('w-{0}', variables('uniqueSuffix'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces",
+      "apiVersion": "2020-03-01",
+      "name": "[variables('workspaceName')]",
+      "location": "[variables('location')]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "friendlyName": "[variables('workspaceName')]"
+      },
+      "dependsOn": [
+      ]
+    },
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces/computes",
+      "apiVersion": "2021-07-01",
+      "name": "[format('{0}/{1}', variables('workspaceName'), format('{0}', variables('computeName')))]",
+      "location": "[variables('location')]",
+      "properties": {
+        "computeType": "ComputeInstance",
+        "properties": {
+          "vmSize": "[parameters('vmComputeSize')]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2021-10-01",
+      "name": "[variables('aiServicesName')]",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "S0"
+      },
+      "kind": "AIServices",
+      "properties": {
+        "apiProperties": {
+          "statisticsEnabled": false
+        }
+      }
+    }
+  ],
+  "outputs": {
+  }
+}

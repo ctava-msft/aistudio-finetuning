@@ -1,0 +1,27 @@
+# Introduction
+This set of scripts that is used to fine tune a language model.
+
+# Setup Infra.
+
+[![Deploy to Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fctava-msft%2Faistudio-finetuning%2Fmain%2Fazuredeploy.json)
+
+
+# Setup environment
+```
+python -m venv .venv
+pip install virtualenv
+[windows].venv\Scripts\activate
+[mac]activate
+pip install -r requirements.txt
+```
+# Scripts
+
+```
+python script.py
+```
+
+# Reference
+
+[AUTOML-Classification](https://learn.microsoft.com/en-us/training/modules/find-best-classification-model-automated-machine-learning/1-introduction)
+
+

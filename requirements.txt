@@ -1,0 +1,7 @@
+python-dotenv
+azure-ai-ml
+azure-identity
+azureml-mlflow
+azure-identity
+datasets
+mlflow
