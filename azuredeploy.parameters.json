@@ -4,6 +4,9 @@
     "parameters": {
         "vmComputeSize": {
             "value": "Standard_D13_v2"
+        },
+        "sshPublicKey": {
+            "value": "redacted"
         }
     }
 }

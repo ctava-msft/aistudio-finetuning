@@ -12,9 +12,16 @@
     "vmComputeSize": {
       "defaultValue": "Standard_D13_v2",
       "type": "string"
+    },
+    "sshPublicKey": {
+      "type": "string",
+      "metadata": {
+        "description": "SSH public key for the admin user."
+      }
     }
   },
   "variables": {
+    "adminUsername": "azureuser",
     "aiServicesName": "[format('ais-{0}', variables('uniqueSuffix'))]",
     "computeName": "[format('ci-{0}', variables('uniqueSuffix'))]",
     "keyVaultName": "[format('kv-{0}', variables('uniqueSuffix'))]",
@@ -200,6 +207,10 @@
         "computeType": "ComputeInstance",
         "properties": {
           "vmSize": "[parameters('vmComputeSize')]",
+          "sshSettings": {
+            "adminUserName": "[variables('adminUsername')]",
+            "adminUserSshPublicKey": "[parameters('sshPublicKey')]"
+          },
           "networkProfile": {
             "networkInterfaces": [
               {
