@@ -10,6 +10,7 @@
   },
   "parameters": {
     "vmComputeSize": {
+      "defaultValue": "Standard_D13_v2",
       "type": "string"
     }
   },
@@ -18,10 +19,13 @@
     "computeName": "[format('ci-{0}', variables('uniqueSuffix'))]",
     "keyVaultName": "[format('kv-{0}', variables('uniqueSuffix'))]",
     "location": "[resourceGroup().location]",
+    "publicIPAddressName": "[format('pip-{0}', variables('uniqueSuffix'))]",
+    "networkInterfaceName": "[format('nic-{0}', variables('uniqueSuffix'))]",
     "storageAccountName": "[format('sa{0}', variables('uniqueSuffix'))]",
     "storageContainerName": "[format('sc{0}', variables('uniqueSuffix'))]",
     "tenantId": "[subscription().tenantId]",
     "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 5)]",
+    "virtualNetworkName": "[format('vnet-{0}', variables('uniqueSuffix'))]",
     "workspaceName": "[format('w-{0}', variables('uniqueSuffix'))]"
   },
   "resources": [
@@ -93,6 +97,57 @@
       ]
     },
     {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2023-04-01",
+      "name": "[variables('virtualNetworkName')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.1.0.0/16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "default",
+            "properties": {
+              "addressPrefix": "10.1.0.0/24"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2020-11-01",
+      "name": "[variables('publicIPAddressName')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic"
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2020-11-01",
+      "name": "[variables('networkInterfaceName')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'yourVnetName', 'yourSubnetName')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
       "type": "Microsoft.MachineLearningServices/workspaces/computes",
       "apiVersion": "2021-07-01",
       "name": "[format('{0}/{1}', variables('workspaceName'), format('{0}', variables('computeName')))]",
@@ -100,7 +155,14 @@
       "properties": {
         "computeType": "ComputeInstance",
         "properties": {
-          "vmSize": "[parameters('vmComputeSize')]"
+          "vmSize": "[parameters('vmComputeSize')]",
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+              }
+            ]
+          }
         }
       },
       "dependsOn": [
