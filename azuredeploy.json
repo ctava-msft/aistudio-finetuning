@@ -10,7 +10,6 @@
   },
   "parameters": {
     "vmComputeSize": {
-      "defaultValue": "standard_nc6",
       "type": "string"
     }
   },

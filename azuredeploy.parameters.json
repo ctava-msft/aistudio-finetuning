@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vmComputeSize": {
-            "value": "standard_nc6"
+            "value": "Standard_D13_v2"
         }
     }
 }
