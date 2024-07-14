@@ -19,8 +19,9 @@
     "computeName": "[format('ci-{0}', variables('uniqueSuffix'))]",
     "keyVaultName": "[format('kv-{0}', variables('uniqueSuffix'))]",
     "location": "[resourceGroup().location]",
-    "publicIPAddressName": "[format('pip-{0}', variables('uniqueSuffix'))]",
     "networkInterfaceName": "[format('nic-{0}', variables('uniqueSuffix'))]",
+    "networkSecurityGroupName": "[format('pip-{0}', variables('uniqueSuffix'))]",
+    "publicIPAddressName": "[format('pip-{0}', variables('uniqueSuffix'))]",
     "storageAccountName": "[format('sa{0}', variables('uniqueSuffix'))]",
     "storageContainerName": "[format('sc{0}', variables('uniqueSuffix'))]",
     "tenantId": "[subscription().tenantId]",
@@ -144,6 +145,37 @@
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
               }
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]",
+          "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
+          "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2023-02-01",
+      "name": "[variables('networkSecurityGroupName')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "SSH",
+            "properties": {
+              "priority": 1000,
+              "protocol": "Tcp",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "22"
             }
           }
         ]
