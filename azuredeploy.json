@@ -20,7 +20,7 @@
     "keyVaultName": "[format('kv-{0}', variables('uniqueSuffix'))]",
     "location": "[resourceGroup().location]",
     "networkInterfaceName": "[format('nic-{0}', variables('uniqueSuffix'))]",
-    "networkSecurityGroupName": "[format('pip-{0}', variables('uniqueSuffix'))]",
+    "networkSecurityGroupName": "[format('nsg-{0}', variables('uniqueSuffix'))]",
     "publicIPAddressName": "[format('pip-{0}', variables('uniqueSuffix'))]",
     "storageAccountName": "[format('sa{0}', variables('uniqueSuffix'))]",
     "storageContainerName": "[format('sc{0}', variables('uniqueSuffix'))]",
