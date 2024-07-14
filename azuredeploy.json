@@ -44,7 +44,7 @@
         },
         "subnets": [
           {
-            "name": "default",
+            "name": "[variables('virtualNetworkSubnetName')]",
             "properties": {
               "addressPrefix": "10.1.0.0/24"
             }
