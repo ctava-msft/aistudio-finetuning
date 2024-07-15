@@ -150,8 +150,7 @@
       "properties": {
         "friendlyName": "[variables('workspaceName')]",
         "keyVault": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
-        "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-        "publicNetworkAccess": "Disabled"
+        "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
