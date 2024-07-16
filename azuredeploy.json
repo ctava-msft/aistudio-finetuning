@@ -204,11 +204,13 @@
       "location": "[variables('location')]",
       "properties": {
         "computeType": "ComputeInstance",
+        "enableNodePublicIp": true,
         "properties": {
           "vmSize": "[parameters('vmComputeSize')]",
+          "computeInstanceAuthorizationType": "personal",
           "sshSettings": {
             "adminUserName": "[variables('adminUsername')]",
-            "adminUserSshPublicKey": "[parameters('sshPublicKey')]"
+            "adminPublicKey": "[parameters('sshPublicKey')]"
           },
           "networkProfile": {
             "networkInterfaces": [
