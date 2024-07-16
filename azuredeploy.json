@@ -208,18 +208,20 @@
       "properties": {
         "computeType": "ComputeInstance",
         "enableNodePublicIp": true,
-        "vmSize": "[parameters('vmComputeSize')]",
-        "computeInstanceAuthorizationType": "personal",
-        "sshSettings": {
-          "adminUserName": "[variables('adminUsername')]",
-          "adminPublicKey": "[parameters('sshPublicKey')]"
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
-            }
-          ]
+        "properties": {
+          "vmSize": "[parameters('vmComputeSize')]",
+          "computeInstanceAuthorizationType": "personal",
+          "sshSettings": {
+            "adminUserName": "[variables('adminUsername')]",
+            "adminPublicKey": "[parameters('sshPublicKey')]"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+              }
+            ]
+          }
         }
       },
       "dependsOn": [
