@@ -99,17 +99,17 @@ def create_pipeline():
         compute_finetune=ML_COMPUTE_NAME,
         # map the dataset splits to parameters
         train_file_path=Input(
-            type="uri_file", path="./dataset/train.jsonl"
+            type="uri_file", path="./dataset/train_sft.jsonl"
         ),
-        validation_file_path=Input(
-            type="uri_file", path="./dataset/validate.jsonl"
-        ),
+        # validation_file_path=Input(
+        #     type="uri_file", path="./dataset/validate.jsonl"
+        # ),
         test_file_path=Input(
-            type="uri_file", path="./dataset/test.jsonl"
+            type="uri_file", path="./dataset/test_sft.jsonl"
         ),
         # Training settings
         # set to the number of GPUs available in the compute
-        number_of_gpu_to_use_finetuning=gpus_per_node,
+        number_of_gpu_to_use_finetuning=0,
         **training_parameters,
         **optimization_parameters
     )
