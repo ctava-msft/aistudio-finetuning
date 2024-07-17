@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "mlRegistryName": {
-            "value": "azure-ml"
+            "value": "azureml"
         },
         "vmComputeSize": {
             "value": "Standard_D13_v2"
