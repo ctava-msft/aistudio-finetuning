@@ -9,6 +9,12 @@
     }
   },
   "parameters": {
+    "mlRegistryName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure Container Registry for Azure Machine Learning."
+      }
+    },
     "vmComputeSize": {
       "defaultValue": "Standard_D13_v2",
       "type": "string"
@@ -240,6 +246,20 @@
         "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]",
         "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
         "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-04-01-preview",
+      "name": "[guid(resourceGroup().id, 'acr-pull-role-assignment')]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
+        "principalId": "[reference(resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName')), '2021-07-01', 'Full').identity.principalId]",
+        "scope": "[resourceId('Microsoft.ContainerRegistry/registries', parameters('mlRegistryName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]",
+        "[resourceId('Microsoft.ContainerRegistry/registries', parameters('mlRegistryName'))]"
       ]
     }
   ],
