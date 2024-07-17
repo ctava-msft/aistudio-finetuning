@@ -206,12 +206,14 @@
       "name": "[format('{0}/{1}', variables('workspaceName'), format('{0}', variables('computeName')))]",
       "location": "[variables('location')]",
       "properties": {
+        "disableLocalAuth": true,
         "computeType": "ComputeInstance",
         "enableNodePublicIp": true,
         "properties": {
           "vmSize": "[parameters('vmComputeSize')]",
           "computeInstanceAuthorizationType": "personal",
           "sshSettings": {
+            "sshPublicAccess": "Enabled",
             "adminUserName": "[variables('adminUsername')]",
             "adminPublicKey": "[parameters('sshPublicKey')]",
             "publicKeys": [
@@ -228,7 +230,7 @@
               }
             ]
           },
-          "idleSchedule": {
+          "schedules": {
             "idleTimeBeforeShutdown": "PT1H", // Example: 1 hour of idle time before shutdown
             "shutdownOnIdle": true
           }
