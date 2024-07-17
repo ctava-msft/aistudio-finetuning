@@ -66,9 +66,9 @@ if exit_status != 0:
 training_parameters = dict(
     #num_train_epochs=3,
     #per_device_train_batch_size=1,
-    per_device_eval_batch_size=1,
-    learning_rate=5e-6,
-    lr_scheduler_type="cosine",
+    #per_device_eval_batch_size=1,
+    #learning_rate=5e-6,
+    #lr_scheduler_type="cosine",
 )
 print(f"The following training parameters are enabled - {training_parameters}")
 
