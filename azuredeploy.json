@@ -206,7 +206,7 @@
       "name": "[format('{0}/{1}', variables('workspaceName'), format('{0}', variables('computeName')))]",
       "location": "[variables('location')]",
       "properties": {
-        "disableLocalAuth": true,
+        "disableLocalAuth": false,
         "computeType": "ComputeInstance",
         "enableNodePublicIp": true,
         "properties": {
