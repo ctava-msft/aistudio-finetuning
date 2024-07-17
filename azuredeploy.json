@@ -213,7 +213,13 @@
           "computeInstanceAuthorizationType": "personal",
           "sshSettings": {
             "adminUserName": "[variables('adminUsername')]",
-            "adminPublicKey": "[parameters('sshPublicKey')]"
+            "adminPublicKey": "[parameters('sshPublicKey')]",
+            "publicKeys": [
+              {
+                "path": "[concat('/home/', variables('adminUsername'), '/.ssh/authorized_keys')]",
+                "keyData": "[parameters('sshPublicKey')]"
+              }
+            ]
           },
           "networkProfile": {
             "networkInterfaces": [
