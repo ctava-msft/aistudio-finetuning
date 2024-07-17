@@ -221,6 +221,10 @@
                 "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
               }
             ]
+          },
+          "idleSchedule": {
+            "idleTimeBeforeShutdown": "PT1H", // Example: 1 hour of idle time before shutdown
+            "shutdownOnIdle": true
           }
         }
       },
