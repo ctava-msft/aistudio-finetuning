@@ -1,20 +1,30 @@
 # Introduction
-This set of scripts that is used to fine tune a language model.
+This repository contains instructions on how to fine tune a language model.
 
-# Setup Infra.
+# Step 1: Setup Infra.
+
+Press the button below for a one-click deployment to Azure using an ARM Template:
 
 [![Deploy to Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fctava-msft%2Faistudio-finetuning%2Fmain%2Fazuredeploy.json)
 
+# Step 2: Clone this repository
 
-# Setup environment
+```
+git clone https://github.com/ctava-msft/aistudio-finetuning
+```
+
+# Step 3: Setup Python environment
+
 ```
 python -m venv .venv
 pip install virtualenv
 [windows].venv\Scripts\activate
-[mac]activate
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 # Scripts
+
+Make a file
 
 ```
 python script.py

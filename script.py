@@ -10,23 +10,34 @@ from azure.ai.ml.entities import AmlCompute
 import ast
 import os
 import time
+from dotenv import load_dotenv
 
+# Load the environment variables
+load_dotenv()
+AZURE_SUBSCRIPTION_ID = os.getenv("AZURE_SUBSCRIPTION_ID", "")
+AZURE_RESOURCE_GROUP = os.getenv("AZURE_RESOURCE_GROUP", "")
+WORKSPACE_NAME = os.getenv("WORKSPACE_NAME", "")
+
+# Obtain Default Azure Credentials
 try:
     credential = DefaultAzureCredential()
     credential.get_token("https://management.azure.com/.default")
 except Exception as ex:
     credential = InteractiveBrowserCredential()
 
+# Create the MLClient object
 try:
     workspace_ml_client = MLClient.from_config(credential=credential)
 except:
     workspace_ml_client = MLClient(
         credential,
-        subscription_id="<SUBSCRIPTION_ID>",
-        resource_group_name="<RESOURCE_GROUP>",
-        workspace_name="<WORKSPACE_NAME>",
+        subscription_id=f"{AZURE_SUBSCRIPTION_ID}",
+        resource_group_name=f"{AZURE_RESOURCE_GROUP}",
+        workspace_name=f"{AZURE_RESOURCE_GROUP}",
     )
 
+print(workspace_ml_client)
+'''
 # the models, fine tuning pipelines and environments are available in the AzureML system registry, "azureml"
 registry_ml_client = MLClient(credential, registry_name="azureml")
 registry_ml_client_staging = MLClient(credential, registry_name="models-staging")
@@ -219,3 +230,5 @@ pipeline_job = workspace_ml_client.jobs.create_or_update(
 )
 # wait for the pipeline job to complete
 workspace_ml_client.jobs.stream(pipeline_job.name)
+
+'''
