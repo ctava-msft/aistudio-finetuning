@@ -16,7 +16,13 @@ from dotenv import load_dotenv
 load_dotenv()
 AZURE_SUBSCRIPTION_ID = os.getenv("AZURE_SUBSCRIPTION_ID", "")
 AZURE_RESOURCE_GROUP = os.getenv("AZURE_RESOURCE_GROUP", "")
-WORKSPACE_NAME = os.getenv("WORKSPACE_NAME", "")
+ML_WORKSPACE_NAME = os.getenv("ML_WORKSPACE_NAME", "")
+ML_EXPERIMENT_NAME = os.getenv("ML_EXPERIMENT_NAME", "")
+ML_COMPUTE_NAME = os.getenv("ML_COMPUTE_NAME", "")
+ML_COMPUTE_SIZE = os.getenv("ML_COMPUTE_SIZE", "")
+ML_DATASET_NAME = os.getenv("ML_DATASET_NAME", "")
+ML_REGISTRY_NAME = os.getenv("ML_REGISTRY_NAME", "")
+ML_FOUNDATION_MODEL_NAME = os.getenv("ML_FOUNDATION_MODEL_NAME", "")
 
 # Obtain Default Azure Credentials
 try:
@@ -25,7 +31,7 @@ try:
 except Exception as ex:
     credential = InteractiveBrowserCredential()
 
-# Create the MLClient object
+# Create the Workspace MLClient object
 try:
     workspace_ml_client = MLClient.from_config(credential=credential)
 except:
@@ -35,55 +41,32 @@ except:
         resource_group_name=f"{AZURE_RESOURCE_GROUP}",
         workspace_name=f"{AZURE_RESOURCE_GROUP}",
     )
-
 print(workspace_ml_client)
-'''
-# the models, fine tuning pipelines and environments are available in the AzureML system registry, "azureml"
-registry_ml_client = MLClient(credential, registry_name="azureml")
-registry_ml_client_staging = MLClient(credential, registry_name="models-staging")
-registry_ml_client_msr = MLClient(credential, registry_name="azureml-msr")
-registry_ml_client_meta = MLClient(credential, registry_name="azureml-meta")
-experiment_name = "chat-completion"
 
-# generating a unique timestamp that can be used for names and versions that need to be unique
-timestamp = str(int(time.time()))
+# Create the Registry MLClient object
+registry_ml_client = MLClient(credential, registry_name=f"{ML_REGISTRY_NAME}")
 
-model_name = "Phi-3-mini-128k-instruct"
-foundation_model = registry_ml_client_staging.models.get(model_name, label="latest")
-# foundation_model = registry_ml_client_msr.models.get(model_name, label="latest")
+# Get the Foundation Model
+foundation_model = registry_ml_client.models.get(ML_FOUNDATION_MODEL_NAME, label="latest")
 print(
     "\n\nUsing model name: {0}, version: {1}, id: {2} for fine tuning".format(
         foundation_model.name, foundation_model.version, foundation_model.id
     )
 )
 
-if "computes_allow_list" in foundation_model.tags:
-    computes_allow_list = ast.literal_eval(
-        foundation_model.tags["computes_allow_list"]
-    )  # convert string to python list
-    print(f"Please create a compute from the above list - {computes_allow_list}")
-else:
-    computes_allow_list = None
-    print("Computes allow list is not part of model tags")
-
-# If you have a specific compute size to work with change it here. By default we use the 8 x V100 compute from the above list
-compute_cluster_size = "Standard_ND40rs_v2"
-
-# If you already have a gpu cluster, mention it here. Else will create a new one with the name 'gpu-cluster-big'
-compute_cluster = "gpu-cluster-big"
-
+# Get the compute
 try:
-    compute = workspace_ml_client.compute.get(compute_cluster)
+    compute = workspace_ml_client.compute.get(ML_COMPUTE_NAME)
     print("The compute cluster already exists! Reusing it for the current run")
 except Exception as ex:
     print(
-        f"Looks like the compute cluster doesn't exist. Creating a new one with compute size {compute_cluster_size}!"
+        f"Looks like the compute cluster doesn't exist. Creating a new one with compute size {ML_COMPUTE_SIZE}!"
     )
     try:
         print("Attempt #1 - Trying to create a dedicated compute")
         compute = AmlCompute(
-            name=compute_cluster,
-            size=compute_cluster_size,
+            name=ML_COMPUTE_NAME,
+            size=ML_COMPUTE_SIZE,
             tier="Dedicated",
             max_instances=2,  # For multi node training set this to an integer value more than 1
         )
@@ -94,8 +77,8 @@ except Exception as ex:
                 "Attempt #2 - Trying to create a low priority compute. Since this is a low priority compute, the job could get pre-empted before completion."
             )
             compute = AmlCompute(
-                name=compute_cluster,
-                size=compute_cluster_size,
+                name=ML_COMPUTE_NAME,
+                size=ML_COMPUTE_SIZE,
                 tier="LowPriority",
                 max_instances=2,  # For multi node training set this to an integer value more than 1
             )
@@ -103,36 +86,18 @@ except Exception as ex:
         except Exception as e:
             print(e)
             raise ValueError(
-                f"WARNING! Compute size {compute_cluster_size} not available in workspace"
+                f"WARNING! Compute size {ML_COMPUTE_SIZE} not available in workspace"
             )
 
 
 # Sanity check on the created compute
-compute = workspace_ml_client.compute.get(compute_cluster)
+compute = workspace_ml_client.compute.get(ML_COMPUTE_NAME)
 if compute.provisioning_state.lower() == "failed":
     raise ValueError(
-        f"Provisioning failed, Compute '{compute_cluster}' is in failed state. "
+        f"Provisioning failed, Compute '{ML_COMPUTE_NAME}' is in failed state. "
         f"please try creating a different compute"
     )
 
-if computes_allow_list is not None:
-    computes_allow_list_lower_case = [x.lower() for x in computes_allow_list]
-    if compute.size.lower() not in computes_allow_list_lower_case:
-        raise ValueError(
-            f"VM size {compute.size} is not in the allow-listed computes for finetuning"
-        )
-else:
-    # Computes with K80 GPUs are not supported
-    unsupported_gpu_vm_list = [
-        "standard_nc6",
-        "standard_nc12",
-        "standard_nc24",
-        "standard_nc24r",
-    ]
-    if compute.size.lower() in unsupported_gpu_vm_list:
-        raise ValueError(
-            f"VM size {compute.size} is currently not supported for finetuning"
-        )
 
 
 # This is the number of GPUs in a single node of the selected 'vm_size' compute.
@@ -152,17 +117,18 @@ if gpu_count_found:
 else:
     raise ValueError(
         f"Number of GPU's in compute {compute.size} not found. Available skus are: {available_sku_sizes}."
-        f"This should not happen. Please check the selected compute cluster: {compute_cluster} and try again."
+        f"This should not happen. Please check the selected compute cluster: {ML_COMPUTE_NAME} and try again."
     )
 
-# download the dataset using the helper script. This script will download the dataset and split it into train, validation and test sets
+# Download the Dataset
+# This script will download the dataset and split it into train, validation and test sets
 exit_status = os.system(
-    "python ./download-dataset.py --dataset HuggingFaceH4/ultrachat_200k --download_dir dataset --dataset_split_pc 5"
+    f"python ./download-dataset.py --dataset {ML_DATASET_NAME} --download_dir dataset --dataset_split_pc 5"
 )
 if exit_status != 0:
     raise Exception("Error downloading dataset")
 
-# Training parameters
+# Set Training Parameters
 training_parameters = dict(
     num_train_epochs=3,
     per_device_train_batch_size=1,
@@ -172,7 +138,8 @@ training_parameters = dict(
 )
 print(f"The following training parameters are enabled - {training_parameters}")
 
-# Optimization parameters - As these parameters are packaged with the model itself, lets retrieve those parameters
+# Get Optimization parameters
+# These parameters are packaged with the model itself, lets retrieve those parameters
 if "model_specific_defaults" in foundation_model.tags:
     optimization_parameters = ast.literal_eval(
         foundation_model.tags["model_specific_defaults"]
@@ -183,29 +150,32 @@ else:
     )
 print(f"The following optimizations are enabled - {optimization_parameters}")
 
-# fetch the pipeline component
-pipeline_component_func = registry_ml_client_staging.components.get(
+# Fetch the pipeline component
+pipeline_component_func = registry_ml_client.components.get(
     name="chat_completion_pipeline", label="latest"
 )
 
-# define the pipeline job
+# Define the pipeline job
 @pipeline()
 def create_pipeline():
     chat_completion_pipeline = pipeline_component_func(
         mlflow_model_path=foundation_model.id,
-        compute_model_import=compute_cluster,
-        compute_preprocess=compute_cluster,
-        compute_finetune=compute_cluster,
+        compute_model_import=ML_COMPUTE_NAME,
+        compute_preprocess=ML_COMPUTE_NAME,
+        compute_finetune=ML_COMPUTE_NAME,
         # map the dataset splits to parameters
         train_file_path=Input(
-            type="uri_file", path="./dataset/train_sft.jsonl"
+            type="uri_file", path="./dataset/train.jsonl"
         ),
-        # validation_file_path=Input(
-        #     type="uri_file", path="./dataset/test_.jsonl"
-        # ),
-        test_file_path=Input(type="uri_file", path="./dataset/test_sft.jsonl"),
+        validation_file_path=Input(
+            type="uri_file", path="./dataset/validate.jsonl"
+        ),
+        test_file_path=Input(
+            type="uri_file", path="./dataset/test.jsonl"
+        ),
         # Training settings
-        number_of_gpu_to_use_finetuning=gpus_per_node,  # set to the number of GPUs available in the compute
+        # set to the number of GPUs available in the compute
+        number_of_gpu_to_use_finetuning=gpus_per_node,
         **training_parameters,
         **optimization_parameters
     )
@@ -215,7 +185,7 @@ def create_pipeline():
         "trained_model": chat_completion_pipeline.outputs.mlflow_model_folder
     }
 
-
+# create the pipeline
 pipeline_object = create_pipeline()
 
 # don't use cached results from previous jobs
@@ -226,9 +196,8 @@ pipeline_object.settings.continue_on_step_failure = False
 
 # submit the pipeline job
 pipeline_job = workspace_ml_client.jobs.create_or_update(
-    pipeline_object, experiment_name=experiment_name
+    pipeline_object, experiment_name=ML_EXPERIMENT_NAME
 )
-# wait for the pipeline job to complete
-workspace_ml_client.jobs.stream(pipeline_job.name)
 
-'''
+# wait for the pipeline to complete
+workspace_ml_client.jobs.stream(pipeline_job.name)
