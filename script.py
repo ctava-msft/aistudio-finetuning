@@ -17,6 +17,7 @@ AZURE_SUBSCRIPTION_ID = os.getenv("AZURE_SUBSCRIPTION_ID", "")
 AZURE_RESOURCE_GROUP = os.getenv("AZURE_RESOURCE_GROUP", "")
 ML_WORKSPACE_NAME = os.getenv("ML_WORKSPACE_NAME", "")
 ML_EXPERIMENT_NAME = os.getenv("ML_EXPERIMENT_NAME", "")
+ML_COMPONENT_NAME = os.getenv("ML_COMPONENT_NAME", "")
 ML_COMPUTE_NAME = os.getenv("ML_COMPUTE_NAME", "")
 ML_COMPUTE_SIZE = os.getenv("ML_COMPUTE_SIZE", "")
 ML_DATASET_NAME = os.getenv("ML_DATASET_NAME", "")
@@ -85,7 +86,7 @@ print(f"The following optimizations are enabled - {optimization_parameters}")
 
 # Fetch the pipeline component
 pipeline_component_func = registry_ml_client.components.get(
-    name=f"{ML_EXPERIMENT_NAME}", label="latest"
+    name=f"{ML_COMPONENT_NAME}", label="latest"
 )
 
 # Define the pipeline job
