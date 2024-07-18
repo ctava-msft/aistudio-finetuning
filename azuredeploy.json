@@ -178,13 +178,6 @@
         },
         "properties": {
             "friendlyName": "[variables('workspaceProjectName')]",
-            "hbiWorkspace": false,
-            "managedNetwork": {
-                "isolationMode": "Disabled"
-            },
-            "v1LegacyMode": false,
-            "publicNetworkAccess": "Enabled",
-            "discoveryUrl": "https://eastus.api.azureml.ms/discovery",
             "hubResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]",
             "enableDataIsolation": true
         }
