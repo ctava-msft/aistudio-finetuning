@@ -4,8 +4,8 @@ from azure.ai.ml.entities import CommandComponent, PipelineComponent, Job, Compo
 from azure.ai.ml import Input
 from azure.identity import (
     DefaultAzureCredential,
-    EnvironmentCredential,
-    InteractiveBrowserCredential,
+    DeviceCodeCredential,
+    EnvironmentCredential
 )
 import ast
 import os
@@ -39,7 +39,7 @@ try:
         credential = DefaultAzureCredential()
     credential.get_token("https://management.azure.com/.default")
 except Exception as ex:
-    credential = InteractiveBrowserCredential()
+    credential = DeviceCodeCredential()
 
 # Create the Workspace MLClient object
 try:
