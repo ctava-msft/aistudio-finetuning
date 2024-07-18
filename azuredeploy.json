@@ -170,7 +170,6 @@
         "name": "[variables('workspaceProjectName')]",
         "location": "eastus",
         "dependsOn": [
-            "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
             "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]"
         ],
         "kind": "Project",
