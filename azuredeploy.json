@@ -189,7 +189,7 @@
             "v1LegacyMode": false,
             "publicNetworkAccess": "Enabled",
             "discoveryUrl": "https://eastus.api.azureml.ms/discovery",
-            "hubResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('workspaces_w_w54to_name'))]",
+            "hubResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]",
             "enableDataIsolation": true
         }
     },
