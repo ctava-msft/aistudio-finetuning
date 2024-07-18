@@ -4,6 +4,7 @@ from azure.ai.ml.entities import CommandComponent, PipelineComponent, Job, Compo
 from azure.ai.ml import Input
 from azure.identity import (
     DefaultAzureCredential,
+    EnvironmentCredential,
     InteractiveBrowserCredential,
 )
 import ast
@@ -13,6 +14,7 @@ from dotenv import load_dotenv
 
 # Load the environment variables
 load_dotenv()
+AZURE_ENVIRONMENT = os.getenv("AZURE_ENVIRONMENT", "")
 AZURE_SUBSCRIPTION_ID = os.getenv("AZURE_SUBSCRIPTION_ID", "")
 AZURE_RESOURCE_GROUP = os.getenv("AZURE_RESOURCE_GROUP", "")
 ML_WORKSPACE_NAME = os.getenv("ML_WORKSPACE_NAME", "")
@@ -26,7 +28,15 @@ ML_FOUNDATION_MODEL_NAME = os.getenv("ML_FOUNDATION_MODEL_NAME", "")
 
 # Obtain Default Azure Credentials
 try:
-    credential = DefaultAzureCredential()
+    # Check if the environment is non-production
+    is_non_production = AZURE_ENVIRONMENT != 'production'
+
+    if is_non_production:
+        # Use EnvironmentCredential for non-production
+        credential = EnvironmentCredential()
+    else:
+        # Use DefaultAzureCredential for production
+        credential = DefaultAzureCredential()
     credential.get_token("https://management.azure.com/.default")
 except Exception as ex:
     credential = InteractiveBrowserCredential()
