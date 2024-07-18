@@ -15,6 +15,12 @@
         "description": "Name of the Azure Container Registry for Azure Machine Learning."
       }
     },
+    "principalIdForUser": {
+      "type": "string",
+      "metadata": {
+        "description": "Principal ID for the user."
+      }
+    },
     "vmComputeSize": {
       "defaultValue": "Standard_D13_v2",
       "type": "string"
@@ -258,6 +264,16 @@
         "principalId": "[reference(resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName')), '2021-04-01').workspaceId]",
         "principalType": "ServicePrincipal",
         "scope": "[resourceGroup().id]"
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-04-01-preview",
+      "name": "[guid(resourceGroup().id, 'Contributor')]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+        "principalId": "[parameters('principalIdForUser')]",
+        "principalType": "User"
       }
     }
   ],
