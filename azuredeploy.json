@@ -172,7 +172,7 @@
         "dependsOn": [
             "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
             "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
-            "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]",
+            "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]"
         ],
         "kind": "Project",
         "identity": {
