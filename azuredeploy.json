@@ -171,7 +171,6 @@
         "location": "eastus",
         "dependsOn": [
             "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-            "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
             "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]"
         ],
         "kind": "Project",
@@ -181,7 +180,6 @@
         "properties": {
             "friendlyName": "[variables('workspaceProjectName')]",
             "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-            "keyVault": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
             "hbiWorkspace": false,
             "managedNetwork": {
                 "isolationMode": "Disabled"
