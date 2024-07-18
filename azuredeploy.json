@@ -179,7 +179,6 @@
         },
         "properties": {
             "friendlyName": "[variables('workspaceProjectName')]",
-            "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
             "hbiWorkspace": false,
             "managedNetwork": {
                 "isolationMode": "Disabled"
