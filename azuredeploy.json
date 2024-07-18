@@ -274,7 +274,7 @@
         "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
         "principalId": "[parameters('principalIdForUser')]",
         "principalType": "User",
-        "scope": "[resourceGroup().id]"
+        "scope": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.MachineLearningServices/workspaces/', variables('workspaceName'), '/datastores/workspaceblobstore')]"
       }
     }
   ],
