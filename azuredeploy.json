@@ -9,12 +9,6 @@
     }
   },
   "parameters": {
-    "mlRegistryName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the Azure Container Registry for Azure Machine Learning."
-      }
-    },
     "principalIdForUser": {
       "type": "string",
       "metadata": {
@@ -48,7 +42,7 @@
     "virtualNetworkName": "[format('vnet-{0}', variables('uniqueSuffix'))]",
     "virtualNetworkSubnetName": "[format('vnet-sn-{0}', variables('uniqueSuffix'))]",
     "workspaceName": "[format('w-{0}', variables('uniqueSuffix'))]",
-    "workspaceRoleAssignmentName": "[format('mlWorkspaceRoleAssignment-{0}', variables('uniqueSuffix'))]"
+    "workspaceProjectName": "[format('p-{0}', variables('uniqueSuffix'))]"
   },
   "resources": [
     {
@@ -169,6 +163,35 @@
         "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
       ]
+    },
+    {
+        "type": "Microsoft.MachineLearningServices/workspaces",
+        "apiVersion": "2024-04-01",
+        "name": "[variables('workspaceProjectName')]",
+        "location": "eastus",
+        "dependsOn": [
+            "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+            "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+            "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]",
+        ],
+        "kind": "Project",
+        "identity": {
+            "type": "SystemAssigned"
+        },
+        "properties": {
+            "friendlyName": "[variables('workspaceProjectName')]",
+            "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+            "keyVault": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+            "hbiWorkspace": false,
+            "managedNetwork": {
+                "isolationMode": "Disabled"
+            },
+            "v1LegacyMode": false,
+            "publicNetworkAccess": "Enabled",
+            "discoveryUrl": "https://eastus.api.azureml.ms/discovery",
+            "hubResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('workspaces_w_w54to_name'))]",
+            "enableDataIsolation": true
+        }
     },
     {
       "type": "Microsoft.CognitiveServices/accounts",
