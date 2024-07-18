@@ -1,12 +1,11 @@
 from azure.ai.ml import MLClient
 from azure.ai.ml.dsl import pipeline
 from azure.ai.ml.entities import CommandComponent, PipelineComponent, Job, Component
-from azure.ai.ml import PyTorchDistribution, Input
+from azure.ai.ml import Input
 from azure.identity import (
     DefaultAzureCredential,
     InteractiveBrowserCredential,
 )
-from azure.ai.ml.entities import AmlCompute
 import ast
 import os
 import time
@@ -86,13 +85,13 @@ print(f"The following optimizations are enabled - {optimization_parameters}")
 
 # Fetch the pipeline component
 pipeline_component_func = registry_ml_client.components.get(
-    name="chat_completion_pipeline", label="latest"
+    name=f"{ML_EXPERIMENT_NAME}", label="latest"
 )
 
 # Define the pipeline job
 @pipeline()
 def create_pipeline():
-    chat_completion_pipeline = pipeline_component_func(
+    pipeline = pipeline_component_func(
         mlflow_model_path=foundation_model.id,
         compute_model_import=ML_COMPUTE_NAME,
         compute_preprocess=ML_COMPUTE_NAME,
@@ -116,7 +115,7 @@ def create_pipeline():
     return {
         # map the output of the fine tuning job to the output of pipeline job so that we can easily register the fine tuned model
         # registering the model is required to deploy the model to an online or batch endpoint
-        "trained_model": chat_completion_pipeline.outputs.mlflow_model_folder
+        "trained_model": pipeline.outputs.mlflow_model_folder
     }
 
 # create the pipeline
