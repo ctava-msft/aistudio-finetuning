@@ -42,7 +42,7 @@
     "virtualNetworkName": "[format('vnet-{0}', variables('uniqueSuffix'))]",
     "virtualNetworkSubnetName": "[format('vnet-sn-{0}', variables('uniqueSuffix'))]",
     "workspaceName": "[format('w-{0}', variables('uniqueSuffix'))]",
-    "workspaceProjectName": "[format('p-{0}', variables('uniqueSuffix'))]"
+    "workspaceProjectName": "[format('w-{0}', variables('uniqueSuffix'))]"
   },
   "resources": [
     {
