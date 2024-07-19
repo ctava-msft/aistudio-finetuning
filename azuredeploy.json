@@ -35,14 +35,14 @@
     "networkInterfaceName": "[format('nic-{0}', variables('uniqueSuffix'))]",
     "networkSecurityGroupName": "[format('nsg-{0}', variables('uniqueSuffix'))]",
     "publicIPAddressName": "[format('pip-{0}', variables('uniqueSuffix'))]",
+    "readerRoleId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
     "storageAccountName": "[format('sa{0}', variables('uniqueSuffix'))]",
     "storageContainerName": "[format('sc{0}', variables('uniqueSuffix'))]",
     "tenantId": "[subscription().tenantId]",
     "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 5)]",
     "virtualNetworkName": "[format('vnet-{0}', variables('uniqueSuffix'))]",
     "virtualNetworkSubnetName": "[format('vnet-sn-{0}', variables('uniqueSuffix'))]",
-    "workspaceName": "[format('w-{0}', variables('uniqueSuffix'))]",
-    "workspaceProjectName": "[format('p-{0}', variables('uniqueSuffix'))]"
+    "workspaceName": "[format('w-{0}', variables('uniqueSuffix'))]"
   },
   "resources": [
     {
@@ -272,6 +272,17 @@
         "principalType": "User",
         "scope": "[resourceGroup().id]"
       }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-04-01-preview",
+      "name": "[guid(subscription().id, resourceGroup().id, 'Microsoft.MachineLearningServices/workspaces', 'Reader')]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('readerRoleId'))]",
+        "principalId": "[parameters('principalIdForUser')]",
+        "scope": "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]"
+      }
+    }
     }
   ],
   "outputs": {
