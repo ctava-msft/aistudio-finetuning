@@ -108,6 +108,9 @@
       },
       "kind": "StorageV2",
       "properties": {
+        "credentials": {
+            "credentialsType": "ManagedIdentity"
+        },
         "encryption": {
           "services": {
             "blob": {
