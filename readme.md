@@ -15,7 +15,7 @@ Press the button below for a one-click deployment to Azure using an ARM Template
 # Step 2: Clone this repository
 
 ```
-git clone https://github.com/ctava-msft/aistudio-finetuning
+git clone https://github.com/ctava-msft/mlstudio-finetuning
 ```
 
 # Step 3: Setup Python environment
