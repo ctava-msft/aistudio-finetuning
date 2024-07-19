@@ -156,6 +156,7 @@
       "identity": {
         "type": "SystemAssigned"
       },
+      "kind": "hub",
       "properties": {
         "friendlyName": "[variables('workspaceName')]",
         "keyVault": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
