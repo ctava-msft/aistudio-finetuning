@@ -281,7 +281,7 @@
       "properties": {
         "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('readerRoleId'))]",
         "principalId": "[parameters('principalIdForUser')]",
-        "scope": "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]"
+        "scope": "[resourceGroup().id]"
       }
     }
   ],
