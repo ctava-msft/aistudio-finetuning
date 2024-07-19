@@ -283,7 +283,6 @@
         "scope": "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]"
       }
     }
-    }
   ],
   "outputs": {
   }
