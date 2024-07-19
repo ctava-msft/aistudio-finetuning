@@ -194,7 +194,7 @@
               "subnet": {
                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('virtualNetworkSubnetName'))]"
               },
-              "privateIPAllocationMethod": "Dynamic", // or "Static"
+              "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
               }
@@ -239,7 +239,7 @@
             ]
           },
           "schedules": {
-            "idleTimeBeforeShutdown": "PT1H", // Example: 1 hour of idle time before shutdown
+            "idleTimeBeforeShutdown": "PT1H",
             "shutdownOnIdle": true
           }
         }
