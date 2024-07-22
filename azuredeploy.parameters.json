@@ -5,9 +5,6 @@
         "mlRegistryName": {
             "value": "azureml"
         },
-        "principalIdForUser": {
-            "value": "redacted"
-        },
         "vmComputeSize": {
             "value": "Standard_D13_v2"
         },

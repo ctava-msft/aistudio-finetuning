@@ -9,12 +9,6 @@
     }
   },
   "parameters": {
-    "principalIdForUser": {
-      "type": "string",
-      "metadata": {
-        "description": "Principal ID for the user."
-      }
-    },
     "vmComputeSize": {
       "defaultValue": "Standard_D13_v2",
       "type": "string"
