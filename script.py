@@ -69,11 +69,15 @@ print(
 
 # Download the Dataset
 # This script will download the dataset and split it into train, validation and test sets
-exit_status = os.system(
-    f"python ./download-dataset.py --dataset {ML_DATASET_NAME} --download_dir dataset --dataset_split_pc 5"
-)
-if exit_status != 0:
-    raise Exception("Error downloading dataset")
+dataset_dir = "./dataset"
+if not os.path.exists(dataset_dir):
+    exit_status = os.system(
+        f"python ./download-dataset.py --dataset {ML_DATASET_NAME} --download_dir {dataset_dir} --dataset_split_pc 5"
+    )
+    if exit_status != 0:
+        raise Exception("Error downloading dataset")
+else:
+    print("Dataset already downloaded")
 
 # Set Training Parameters
 training_parameters = dict(
