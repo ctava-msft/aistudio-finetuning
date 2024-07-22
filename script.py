@@ -41,6 +41,7 @@ try:
 except Exception as ex:
     credential = DeviceCodeCredential()
 
+print(credential)
 # Create the Workspace MLClient object
 try:
     workspace_ml_client = MLClient.from_config(credential=credential)
