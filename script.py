@@ -4,10 +4,10 @@ from azure.ai.ml.entities import CommandComponent, PipelineComponent, Job, Compo
 from azure.ai.ml import Input
 from azure.identity import (
     DefaultAzureCredential,
-    DeviceCodeCredential,
-    EnvironmentCredential
+    DeviceCodeCredential
 )
 import ast
+import backtrace
 import os
 import time
 from dotenv import load_dotenv
@@ -33,13 +33,15 @@ try:
 
     if is_non_production:
         # Use EnvironmentCredential for non-production
-        credential = EnvironmentCredential()
+        credential = DeviceCodeCredential()
     else:
         # Use DefaultAzureCredential for production
         credential = DefaultAzureCredential()
-    credential.get_token("https://management.azure.com/.default")
+        credential.get_token("https://management.azure.com/.default")
 except Exception as ex:
-    credential = DeviceCodeCredential()
+    backtrace.print_exc()
+    raise ex
+
 
 print(credential)
 # Create the Workspace MLClient object

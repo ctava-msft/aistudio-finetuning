@@ -1,7 +1,7 @@
-python-dotenv
 azure-ai-ml
 azure-identity
 azureml-mlflow
-azure-identity
+backtrace
 datasets
 mlflow
+python-dotenv
