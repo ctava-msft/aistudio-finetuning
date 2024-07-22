@@ -35,7 +35,6 @@
     "networkInterfaceName": "[format('nic-{0}', variables('uniqueSuffix'))]",
     "networkSecurityGroupName": "[format('nsg-{0}', variables('uniqueSuffix'))]",
     "publicIPAddressName": "[format('pip-{0}', variables('uniqueSuffix'))]",
-    "readerRoleId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
     "storageAccountName": "[format('sa{0}', variables('uniqueSuffix'))]",
     "storageContainerName": "[format('sc{0}', variables('uniqueSuffix'))]",
     "tenantId": "[subscription().tenantId]",
@@ -260,27 +259,6 @@
         "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
         "principalId": "[reference(resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName')), '2021-04-01').workspaceId]",
         "principalType": "ServicePrincipal",
-        "scope": "[resourceGroup().id]"
-      }
-    },
-    {
-      "type": "Microsoft.Authorization/roleAssignments",
-      "apiVersion": "2020-04-01-preview",
-      "name": "[guid(resourceGroup().id, 'datastore', 'Reader')]",
-      "properties": {
-        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
-        "principalId": "[parameters('principalIdForUser')]",
-        "principalType": "User",
-        "scope": "[resourceGroup().id]"
-      }
-    },
-    {
-      "type": "Microsoft.Authorization/roleAssignments",
-      "apiVersion": "2020-04-01-preview",
-      "name": "[guid(subscription().id, resourceGroup().id, 'Microsoft.MachineLearningServices/workspaces', 'Reader')]",
-      "properties": {
-        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('readerRoleId'))]",
-        "principalId": "[parameters('principalIdForUser')]",
         "scope": "[resourceGroup().id]"
       }
     }
