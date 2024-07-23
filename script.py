@@ -9,7 +9,6 @@ from azure.identity import (
     DefaultAzureCredential,
     DeviceCodeCredential
 )
-from azureml.core import Workspace
 from dotenv import load_dotenv
 
 # Load the environment variables
@@ -19,6 +18,7 @@ AZURE_SUBSCRIPTION_ID = os.getenv("AZURE_SUBSCRIPTION_ID", "")
 AZURE_RESOURCE_GROUP = os.getenv("AZURE_RESOURCE_GROUP", "")
 AZURE_TENANT_ID = os.getenv("AZURE_TENANT_ID", "")
 ML_WORKSPACE_NAME = os.getenv("ML_WORKSPACE_NAME", "")
+ML_PROJECT_NAME = os.getenv("ML_PROJECT_NAME", "")
 ML_EXPERIMENT_NAME = os.getenv("ML_EXPERIMENT_NAME", "")
 ML_COMPONENT_NAME = os.getenv("ML_COMPONENT_NAME", "")
 ML_COMPUTE_NAME = os.getenv("ML_COMPUTE_NAME", "")
@@ -43,8 +43,6 @@ except Exception as ex:
     traceback.print_exc()
     raise ex
 
-
-print(credential)
 # Create the Workspace MLClient object
 try:
     workspace_ml_client = MLClient.from_config(credential=credential)
@@ -59,7 +57,6 @@ print(workspace_ml_client)
 
 # Create the Registry MLClient object
 registry_ml_client = MLClient(credential, registry_name=f"{ML_REGISTRY_NAME}")
-
 # Get the Foundation Model
 foundation_model = registry_ml_client.models.get(ML_FOUNDATION_MODEL_NAME, label="latest")
 print(
@@ -129,30 +126,14 @@ def create_pipeline():
         # set to the number of GPUs available in the compute
         number_of_gpu_to_use_finetuning=0,
         **training_parameters,
-        **optimization_parameters
+        **optimization_parameters,
+        project=f"{ML_PROJECT_NAME}"
     )
     return {
         # map the output of the fine tuning job to the output of pipeline job so that we can easily register the fine tuned model
         # registering the model is required to deploy the model to an online or batch endpoint
         "trained_model": pipeline.outputs.mlflow_model_folder
     }
-
-def list_workspace_resources(subscription_id, resource_group, workspace_name):
-    # Authenticate and connect to the Azure workspace
-    ws = Workspace(subscription_id=subscription_id, resource_group=resource_group, workspace_name=workspace_name)
-    
-    # List blob storage accounts
-    blob_storage_accounts = ws.get_details()['storageAccount']
-    print("Blob Storage Accounts:")
-    for account in blob_storage_accounts:
-        print(f" - {account}")
-
-    # Add more resource types as needed
-    # For example, to list compute targets:
-    compute_targets = ws.compute_targets
-    print("\nCompute Targets:")
-    for name, target in compute_targets.items():
-        print(f" - {name}: {target.type}")
 
 try:
 
@@ -177,7 +158,7 @@ try:
 
     # wait for the pipeline to complete
     workspace_ml_client.jobs.stream(pipeline_job.name)
-    
+
 except Exception as ex:
     traceback.print_exc()
     raise ex

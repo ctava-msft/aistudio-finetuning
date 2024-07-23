@@ -22,7 +22,6 @@
   },
   "variables": {
     "adminUsername": "azureuser",
-    "aiServicesName": "[format('ais-{0}', variables('uniqueSuffix'))]",
     "computeName": "[format('ci-{0}', variables('uniqueSuffix'))]",
     "keyVaultName": "[format('kv-{0}', variables('uniqueSuffix'))]",
     "location": "[resourceGroup().location]",
@@ -35,7 +34,8 @@
     "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 5)]",
     "virtualNetworkName": "[format('vnet-{0}', variables('uniqueSuffix'))]",
     "virtualNetworkSubnetName": "[format('vnet-sn-{0}', variables('uniqueSuffix'))]",
-    "workspaceName": "[format('w-{0}', variables('uniqueSuffix'))]"
+    "workspaceName": "[format('w-{0}', variables('uniqueSuffix'))]",
+    "workspaceProjectName": "[format('wp-{0}', variables('uniqueSuffix'))]"
   },
   "resources": [
     {
@@ -159,6 +159,27 @@
         "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
       ]
+    },
+    {
+        "type": "Microsoft.MachineLearningServices/workspaces",
+        "apiVersion": "2024-04-01",
+        "name": "[variables('workspaceProjectName')]",
+        "location": "[variables('location')]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+            "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+            "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]",
+        ],
+        "kind": "Project",
+        "identity": {
+            "type": "SystemAssigned"
+        },
+        "properties": {
+            "friendlyName": "[variables('workspaceProjectName')]",
+            "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+            "keyVault": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+            "hubResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]"
+        }
     },
     {
       "type": "Microsoft.Network/networkInterfaces",
