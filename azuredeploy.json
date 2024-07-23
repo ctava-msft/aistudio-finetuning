@@ -161,21 +161,6 @@
       ]
     },
     {
-      "type": "Microsoft.CognitiveServices/accounts",
-      "apiVersion": "2021-10-01",
-      "name": "[variables('aiServicesName')]",
-      "location": "[variables('location')]",
-      "sku": {
-        "name": "S0"
-      },
-      "kind": "AIServices",
-      "properties": {
-        "apiProperties": {
-          "statisticsEnabled": false
-        }
-      }
-    },
-    {
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2020-11-01",
       "name": "[variables('networkInterfaceName')]",
@@ -244,17 +229,6 @@
         "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
         "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
       ]
-    },
-    {
-      "type": "Microsoft.Authorization/roleAssignments",
-      "apiVersion": "2020-04-01-preview",
-      "name": "[guid(resourceGroup().id, variables('workspaceName'), 'roleAssignment')]",
-      "properties": {
-        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
-        "principalId": "[reference(resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName')), '2021-04-01').workspaceId]",
-        "principalType": "ServicePrincipal",
-        "scope": "[resourceGroup().id]"
-      }
     }
   ],
   "outputs": {
