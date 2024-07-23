@@ -157,11 +157,12 @@ def list_workspace_resources(subscription_id, resource_group, workspace_name):
 try:
 
     # get the workspace
+    print(f"Getting workspace {ML_WORKSPACE_NAME}")
     ws = workspace_ml_client.workspaces.get(f"{ML_WORKSPACE_NAME}")
     print(f"ws:{ws.location}-{ws.resource_group}")
 
     # list_workspace_resources
-    list_workspace_resources(AZURE_SUBSCRIPTION_ID, AZURE_RESOURCE_GROUP, ML_WORKSPACE_NAME)
+    #list_workspace_resources(AZURE_SUBSCRIPTION_ID, AZURE_RESOURCE_GROUP, ML_WORKSPACE_NAME)
 
     '''
     # create the pipeline
