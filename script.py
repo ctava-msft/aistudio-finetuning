@@ -3,12 +3,13 @@ import os
 import traceback
 from azure.ai.ml import MLClient
 from azure.ai.ml.dsl import pipeline
-from azure.ai.ml.entities import Workspace, CommandComponent, PipelineComponent, Job, Component
+from azure.ai.ml.entities import CommandComponent, PipelineComponent, Job, Component
 from azure.ai.ml import Input
 from azure.identity import (
     DefaultAzureCredential,
     DeviceCodeCredential
 )
+from azureml.core import Workspace
 from dotenv import load_dotenv
 
 # Load the environment variables
