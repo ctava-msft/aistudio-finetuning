@@ -137,12 +137,33 @@ def create_pipeline():
         "trained_model": pipeline.outputs.mlflow_model_folder
     }
 
+def list_workspace_resources(subscription_id, resource_group, workspace_name):
+    # Authenticate and connect to the Azure workspace
+    ws = Workspace(subscription_id=subscription_id, resource_group=resource_group, workspace_name=workspace_name)
+    
+    # List blob storage accounts
+    blob_storage_accounts = ws.get_details()['storageAccount']
+    print("Blob Storage Accounts:")
+    for account in blob_storage_accounts:
+        print(f" - {account}")
+
+    # Add more resource types as needed
+    # For example, to list compute targets:
+    compute_targets = ws.compute_targets
+    print("\nCompute Targets:")
+    for name, target in compute_targets.items():
+        print(f" - {name}: {target.type}")
+
 try:
 
     # get the workspace
     ws = workspace_ml_client.workspaces.get(f"{ML_WORKSPACE_NAME}")
     print(f"ws:{ws.location}-{ws.resource_group}")
 
+    # list_workspace_resources
+    list_workspace_resources(AZURE_SUBSCRIPTION_ID, AZURE_RESOURCE_GROUP, ML_WORKSPACE_NAME)
+
+    '''
     # create the pipeline
     pipeline_object = create_pipeline()
 
@@ -155,10 +176,11 @@ try:
     # submit the pipeline job
     pipeline_job = workspace_ml_client.jobs.create_or_update(
         pipeline_object, experiment_name=ML_EXPERIMENT_NAME
-    )
+    ) 
 
     # wait for the pipeline to complete
     workspace_ml_client.jobs.stream(pipeline_job.name)
+    '''
 except Exception as ex:
     traceback.print_exc()
     raise ex
