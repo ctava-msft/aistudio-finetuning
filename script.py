@@ -161,10 +161,6 @@ try:
     ws = workspace_ml_client.workspaces.get(f"{ML_WORKSPACE_NAME}")
     print(f"ws:{ws.location}-{ws.resource_group}")
 
-    # list_workspace_resources
-    #list_workspace_resources(AZURE_SUBSCRIPTION_ID, AZURE_RESOURCE_GROUP, ML_WORKSPACE_NAME)
-
-    '''
     # create the pipeline
     pipeline_object = create_pipeline()
 
@@ -181,7 +177,7 @@ try:
 
     # wait for the pipeline to complete
     workspace_ml_client.jobs.stream(pipeline_job.name)
-    '''
+    
 except Exception as ex:
     traceback.print_exc()
     raise ex

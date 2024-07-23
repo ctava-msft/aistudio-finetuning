@@ -1,5 +1,4 @@
 azure-ai-ml
-azureml-core
 azure-identity
 azureml-mlflow
 datasets
