@@ -7,10 +7,10 @@ from azure.identity import (
     DeviceCodeCredential
 )
 import ast
-import backtrace
 import os
 import time
 from dotenv import load_dotenv
+import traceback
 
 # Load the environment variables
 load_dotenv()
@@ -40,7 +40,7 @@ try:
         credential = DefaultAzureCredential(tenant_id=AZURE_TENANT_ID)
         credential.get_token("https://management.azure.com/.default")
 except Exception as ex:
-    backtrace.print_exc()
+    traceback.print_exc()
     raise ex
 
 
@@ -160,5 +160,5 @@ try:
     # wait for the pipeline to complete
     workspace_ml_client.jobs.stream(pipeline_job.name)
 except Exception as ex:
-    backtrace.print_exc()
+    traceback.print_exc()
     raise ex
