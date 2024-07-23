@@ -17,6 +17,7 @@ load_dotenv()
 AZURE_ENVIRONMENT = os.getenv("AZURE_ENVIRONMENT", "")
 AZURE_SUBSCRIPTION_ID = os.getenv("AZURE_SUBSCRIPTION_ID", "")
 AZURE_RESOURCE_GROUP = os.getenv("AZURE_RESOURCE_GROUP", "")
+AZURE_TENANT_ID = os.getenv("AZURE_TENANT_ID", "")
 ML_WORKSPACE_NAME = os.getenv("ML_WORKSPACE_NAME", "")
 ML_EXPERIMENT_NAME = os.getenv("ML_EXPERIMENT_NAME", "")
 ML_COMPONENT_NAME = os.getenv("ML_COMPONENT_NAME", "")
@@ -33,10 +34,10 @@ try:
 
     if is_non_production:
         # Use EnvironmentCredential for non-production
-        credential = DeviceCodeCredential()
+        credential = DeviceCodeCredential(tenant_id=AZURE_TENANT_ID)
     else:
         # Use DefaultAzureCredential for production
-        credential = DefaultAzureCredential()
+        credential = DefaultAzureCredential(tenant_id=AZURE_TENANT_ID)
         credential.get_token("https://management.azure.com/.default")
 except Exception as ex:
     backtrace.print_exc()
