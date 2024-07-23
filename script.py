@@ -137,22 +137,28 @@ def create_pipeline():
         "trained_model": pipeline.outputs.mlflow_model_folder
     }
 
-# create the pipeline
-pipeline_object = create_pipeline()
+try:
 
-# don't use cached results from previous jobs
-pipeline_object.settings.force_rerun = True
+    # get the workspace
+    ws = workspace_ml_client.workspaces.get(f"{ML_WORKSPACE_NAME}")
+    print(f"ws:{ws.location}-{ws.resource_group}")
 
-# set continue on step failure to False
-pipeline_object.settings.continue_on_step_failure = False
+    # create the pipeline
+    pipeline_object = create_pipeline()
 
-ws = workspace_ml_client.workspaces.get(f"{ML_WORKSPACE_NAME}")
-print(f"ws:{ws.location}-{ws.resource_group}")
+    # don't use cached results from previous jobs
+    pipeline_object.settings.force_rerun = True
 
-# submit the pipeline job
-pipeline_job = workspace_ml_client.jobs.create_or_update(
-    pipeline_object, experiment_name=ML_EXPERIMENT_NAME
-)
+    # set continue on step failure to False
+    pipeline_object.settings.continue_on_step_failure = False
 
-# wait for the pipeline to complete
-workspace_ml_client.jobs.stream(pipeline_job.name)
+    # submit the pipeline job
+    pipeline_job = workspace_ml_client.jobs.create_or_update(
+        pipeline_object, experiment_name=ML_EXPERIMENT_NAME
+    )
+
+    # wait for the pipeline to complete
+    workspace_ml_client.jobs.stream(pipeline_job.name)
+except Exception as ex:
+    backtrace.print_exc()
+    raise ex
