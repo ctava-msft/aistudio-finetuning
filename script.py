@@ -138,7 +138,7 @@ def create_pipeline():
 
 def list_workspace_resources(subscription_id, resource_group, workspace_name):
     # Authenticate and connect to the Azure workspace
-    ws = Workspace(subscription_id=subscription_id, resource_group=resource_group, workspace_name=workspace_name)
+    ws = Workspace(subscription_id=subscription_id, resource_group=resource_group, name=workspace_name)
     
     # List blob storage accounts
     blob_storage_accounts = ws.get_details()['storageAccount']
