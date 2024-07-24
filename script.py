@@ -3,7 +3,7 @@ import os
 import traceback
 from azure.ai.ml import MLClient
 from azure.ai.ml.dsl import pipeline
-from azure.ai.ml.entities import CommandComponent, PipelineComponent, Job, Component
+from azure.ai.ml.entities import CommandComponent, PipelineComponent, Job, Component, Connection, AzureOpenAIConnection, ApiKeyConfiguration
 from azure.ai.ml import Input
 from azure.identity import (
     DefaultAzureCredential,
@@ -140,9 +140,10 @@ try:
     print(f"Getting workspace {ML_WORKSPACE_NAME}")
     hub = workspace_ml_client.workspaces.get(f"{ML_WORKSPACE_NAME}")
     print(f"ws:{hub.location}-{hub.resource_group}")
-
-    print(dir(hub))
-    print(help(hub))
+    
+    connection_list = workspace_ml_client.connections.list()
+    for conn in connection_list:
+        print(conn)
 
     # # List all datastores in the workspace
     # datastores = ws.datastores
