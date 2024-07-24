@@ -3,12 +3,13 @@ import os
 import traceback
 from azure.ai.ml import MLClient
 from azure.ai.ml.dsl import pipeline
-from azure.ai.ml.entities import CommandComponent, PipelineComponent, Job, Component, Connection, AzureOpenAIConnection, ApiKeyConfiguration
+from azure.ai.ml.entities import CommandComponent, PipelineComponent, Job, Component
 from azure.ai.ml import Input
 from azure.identity import (
     DefaultAzureCredential,
     DeviceCodeCredential
 )
+import mlflow
 from dotenv import load_dotenv
 
 # Load the environment variables
@@ -140,10 +141,16 @@ try:
     print(f"Getting workspace {ML_WORKSPACE_NAME}")
     hub = workspace_ml_client.workspaces.get(f"{ML_WORKSPACE_NAME}")
     print(f"ws:{hub.location}-{hub.resource_group}")
-    
-    connection_list = workspace_ml_client.connections.list()
-    for conn in connection_list:
-        print(conn)
+
+    azureml_tracking_uri = workspace_ml_client.workspaces.get(
+        workspace_ml_client.workspace_name
+    ).mlflow_tracking_uri
+    mlflow.set_tracking_uri(azureml_tracking_uri)
+    print(f"Tracking URI: {azureml_tracking_uri}")
+
+    # connection_list = workspace_ml_client.connections.list()
+    # for conn in connection_list:
+    #     print(conn)
 
     # # List all datastores in the workspace
     # datastores = ws.datastores
