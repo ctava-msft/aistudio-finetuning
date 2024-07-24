@@ -138,14 +138,16 @@ try:
 
     # get the workspace
     print(f"Getting workspace {ML_WORKSPACE_NAME}")
-    ws = workspace_ml_client.workspaces.get(f"{ML_WORKSPACE_NAME}")
-    print(f"ws:{ws.location}-{ws.resource_group}")
+    hub = workspace_ml_client.workspaces.get(f"{ML_WORKSPACE_NAME}")
+    print(f"ws:{hub.location}-{hub.resource_group}")
 
+    print(dir(hub))
+    print(help(hub))
 
-    # List all datastores in the workspace
-    datastores = ws.datastores
-    for name, datastore in datastores.items():
-        print(f"Datastore name: {name}")
+    # # List all datastores in the workspace
+    # datastores = ws.datastores
+    # for name, datastore in datastores.items():
+    #     print(f"Datastore name: {name}")
 
     # create the pipeline
     pipeline_object = create_pipeline()
