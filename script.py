@@ -126,8 +126,7 @@ def create_pipeline():
         # set to the number of GPUs available in the compute
         number_of_gpu_to_use_finetuning=0,
         **training_parameters,
-        **optimization_parameters,
-        project=f"{ML_PROJECT_NAME}"
+        **optimization_parameters
     )
     return {
         # map the output of the fine tuning job to the output of pipeline job so that we can easily register the fine tuned model
@@ -154,7 +153,7 @@ try:
     # submit the pipeline job
     pipeline_job = workspace_ml_client.jobs.create_or_update(
         pipeline_object, experiment_name=ML_EXPERIMENT_NAME
-    ) 
+    )
 
     # wait for the pipeline to complete
     workspace_ml_client.jobs.stream(pipeline_job.name)
